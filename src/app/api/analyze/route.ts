@@ -50,27 +50,29 @@ export async function POST(request: NextRequest) {
 
     const langName = languageNames[language] || 'Spanish';
 
-    const prompt = `Analyze this colonoscopy report image. Extract ALL endoscopic findings/diagnoses listed.
+    const prompt = `Analyze this colonoscopy report image.
 
-For each finding:
-1. Extract the exact medical term as written in the report (always in the original language of the report)
-2. Translate that medical term into ${langName} (medical_name_translated) — use natural, correct ${langName} terminology
+IMPORTANT: Extract findings ONLY from the CONCLUSIONS (CONCLUSIÓN/CONCLUSIONES) section of the report. Do NOT extract from the "Hallazgos" or findings narrative — that section describes the same diagnoses in descriptive form and would cause duplicates. Use only the final numbered diagnosis list in the conclusions.
+
+For each diagnosis in the conclusions:
+1. Extract the exact term as written in the conclusions (original language)
+2. Translate that term into ${langName} (medical_name_translated) — natural, correct ${langName} medical terminology
 3. Identify anatomical location: one of [terminal_ileum, cecum, ascending_colon, hepatic_flexure, transverse_colon, splenic_flexure, descending_colon, sigmoid_colon, rectum, anal_canal, multiple, unspecified]
 4. Match to one of these known diagnosis types if applicable: [${diagnosisKeys.join(', ')}]
-5. Generate a patient-friendly explanation IN ${langName} with correct grammar and pronunciation for that language:
-   - what_is: what is this finding (simple, clear, no medical jargon, 2-4 sentences)
-   - implications: what does it mean for the patient's health (reassuring but accurate, 2-4 sentences)
+5. Generate a patient-friendly explanation IN ${langName}:
+   - what_is: what is this finding (simple, no medical jargon, 2-4 sentences)
+   - implications: what it means for the patient's health (reassuring but accurate, 2-4 sentences)
    - follow_up: recommended next steps (practical advice, 2-3 sentences)
 
 Also provide:
-- overall_summary: A brief overall summary of the colonoscopy results in ${langName} (2-3 sentences, reassuring tone)
-- report_date: Extract the date of the colonoscopy if visible in the report, otherwise null
+- overall_summary: Brief overall summary in ${langName} (2-3 sentences, reassuring tone)
+- report_date: Date of the colonoscopy if visible, otherwise null
 
 Return ONLY valid JSON (no markdown, no code blocks):
 {
   "findings": [
     {
-      "medical_name": "exact term from report in original language",
+      "medical_name": "exact term from conclusions in original language",
       "medical_name_translated": "term translated to ${langName}",
       "location": "one of the valid segments",
       "overall_finding_type": "matching key from known diagnoses or empty string",
