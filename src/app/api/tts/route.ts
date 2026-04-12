@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts';
 
+export const maxDuration = 30;
+
 // Neural voices — one native female voice per supported language
 const voiceMap: Record<string, string> = {
   es: 'es-ES-ElviraNeural',

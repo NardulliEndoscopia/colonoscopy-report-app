@@ -3,6 +3,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import { Language, AnalysisResult, Finding } from '@/lib/types';
 import diagnosesData from '@/data/diagnoses.json';
 
+export const maxDuration = 60;
+
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
