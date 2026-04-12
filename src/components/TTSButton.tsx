@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Language } from '@/lib/types';
 
 interface TTSButtonProps {
@@ -10,13 +10,77 @@ interface TTSButtonProps {
   label?: string;
 }
 
+const langToBCP47: Record<Language, string> = {
+  es: 'es-ES', en: 'en-GB', fr: 'fr-FR', it: 'it-IT',
+  pt: 'pt-PT', de: 'de-DE', nl: 'nl-NL', pl: 'pl-PL',
+  ro: 'ro-RO', ar: 'ar-SA', ru: 'ru-RU', zh: 'zh-CN',
+};
+
+const langVoicePriority: Record<Language, string[]> = {
+  es: ['es-ES', 'es-MX', 'es'],
+  en: ['en-GB', 'en-US', 'en-AU', 'en'],
+  fr: ['fr-FR', 'fr-CA', 'fr'],
+  it: ['it-IT', 'it'],
+  pt: ['pt-PT', 'pt-BR', 'pt'],
+  de: ['de-DE', 'de-AT', 'de'],
+  nl: ['nl-NL', 'nl'],
+  pl: ['pl-PL', 'pl'],
+  ro: ['ro-RO', 'ro'],
+  ar: ['ar-SA', 'ar-EG', 'ar'],
+  ru: ['ru-RU', 'ru'],
+  zh: ['zh-CN', 'zh-TW', 'zh'],
+};
+
+function getBestVoice(language: Language): SpeechSynthesisVoice | null {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return null;
+  for (const locale of langVoicePriority[language]) {
+    // Prefer neural/natural voices (Microsoft Edge, Apple, Google)
+    const neural = voices.find(v => v.lang === locale &&
+      /neural|natural|online/i.test(v.name));
+    if (neural) return neural;
+  }
+  for (const locale of langVoicePriority[language]) {
+    const match = voices.find(v => v.lang === locale);
+    if (match) return match;
+  }
+  const prefix = langToBCP47[language].split('-')[0].toLowerCase();
+  return voices.find(v => v.lang.toLowerCase().startsWith(prefix)) ?? null;
+}
+
+function speakWithBrowser(text: string, language: Language,
+  onStart: () => void, onEnd: () => void) {
+  if (!window.speechSynthesis) { onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = langToBCP47[language];
+  utterance.rate = 0.88;
+  const voice = getBestVoice(language);
+  if (voice) utterance.voice = voice;
+  utterance.onstart = onStart;
+  utterance.onend = onEnd;
+  utterance.onerror = onEnd;
+  window.speechSynthesis.speak(utterance);
+}
+
 export default function TTSButton({ text, language, className = '', label }: TTSButtonProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const objectUrlRef = useRef<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
-  const stop = useCallback(() => {
+  // Keep voices ready
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.addEventListener('voiceschanged', () =>
+      window.speechSynthesis.getVoices());
+  }, []);
+
+  const stopAll = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = '';
@@ -26,48 +90,62 @@ export default function TTSButton({ text, language, className = '', label }: TTS
       URL.revokeObjectURL(objectUrlRef.current);
       objectUrlRef.current = null;
     }
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     setIsSpeaking(false);
     setIsLoading(false);
   }, []);
 
   const handleClick = useCallback(async () => {
-    if (isSpeaking || isLoading) {
-      stop();
-      return;
-    }
+    if (isSpeaking || isLoading) { stopAll(); return; }
 
     setIsLoading(true);
+    abortRef.current = new AbortController();
 
     try {
+      // Try server-side neural TTS first (10s timeout)
+      const timeoutId = setTimeout(() => abortRef.current?.abort(), 10000);
       const res = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, language }),
+        signal: abortRef.current.signal,
       });
+      clearTimeout(timeoutId);
 
-      if (!res.ok) throw new Error('TTS failed');
+      if (!res.ok) throw new Error('server-tts-failed');
 
       const blob = await res.blob();
+      if (blob.size === 0) throw new Error('empty-audio');
+
       const url = URL.createObjectURL(blob);
       objectUrlRef.current = url;
-
       const audio = new Audio(url);
       audioRef.current = audio;
-
-      audio.onended = () => {
-        stop();
-      };
+      audio.onended = stopAll;
       audio.onerror = () => {
-        stop();
+        stopAll();
+        speakWithBrowser(text, language, () => setIsSpeaking(true), stopAll);
       };
-
       setIsLoading(false);
       setIsSpeaking(true);
       await audio.play();
+
     } catch {
-      stop();
+      // Server TTS failed or timed out → fall back to browser speech synthesis
+      setIsLoading(false);
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        speakWithBrowser(
+          text, language,
+          () => setIsSpeaking(true),
+          stopAll,
+        );
+      } else {
+        stopAll();
+      }
     }
-  }, [isSpeaking, isLoading, text, language, stop]);
+  }, [isSpeaking, isLoading, text, language, stopAll]);
 
   const isActive = isSpeaking || isLoading;
 
