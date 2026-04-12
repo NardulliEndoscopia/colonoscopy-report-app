@@ -1,0 +1,156 @@
+{
+  "diverticulos": {
+    "label_es": "Divertículos",
+    "label_en": "Diverticula",
+    "default_explanation_es": {
+      "what_is": "Los divertículos son pequeñas bolsas o 'bolsillos' que se forman en la pared del intestino grueso. Son muy comunes, especialmente a partir de los 50 años, y la mayoría de las personas que los tienen no sienten ninguna molestia.",
+      "implications": "En la mayoría de los casos, los divertículos son inofensivos (diverticulosis). Sólo en un pequeño porcentaje pueden inflamarse o infectarse (diverticulitis), causando dolor abdominal, fiebre o cambios en el ritmo intestinal. Si esto ocurre, es importante consultar a su médico.",
+      "follow_up": "No requiere tratamiento especial, pero se recomienda una dieta rica en fibra (frutas, verduras, legumbres, cereales integrales), buena hidratación y ejercicio regular. Su médico le indicará si necesita algún control adicional."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "polipo_diminuto": {
+    "label_es": "Pólipo Diminuto",
+    "label_en": "Diminutive Polyp",
+    "default_explanation_es": {
+      "what_is": "Un pólipo diminuto es un pequeño crecimiento (menor de 5 mm, del tamaño de un punto) en la mucosa interna del intestino grueso. Son muy frecuentes y en la gran mayoría de los casos son completamente benignos.",
+      "implications": "Los pólipos diminutos tienen un riesgo mínimo de convertirse en cáncer. En la mayoría de los casos han sido extraídos durante la colonoscopia o se decide seguimiento. Su médico ha analizado o enviará a analizar el tejido (biopsia) para confirmar su naturaleza.",
+      "follow_up": "Su médico le indicará el intervalo de seguimiento recomendado según el resultado de la biopsia, habitualmente entre 5 y 10 años si son benignos."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "polipo_sesil": {
+    "label_es": "Pólipo Sésil",
+    "label_en": "Sessile Polyp",
+    "default_explanation_es": {
+      "what_is": "Un pólipo sésil es un crecimiento plano o de base ancha que se adhiere directamente a la pared del intestino, sin un 'tallo' que lo sostenga. Puede ser de varios tamaños.",
+      "implications": "Dependiendo de su tamaño y características, puede tener un mayor o menor potencial de transformación. Su naturaleza exacta se determina mediante el análisis del tejido extraído (biopsia o polipectomía). Su médico le explicará los resultados.",
+      "follow_up": "El seguimiento depende del tipo y tamaño del pólipo. Si fue extraído completamente, habitualmente se realizará una nueva colonoscopia a los 3 o 5 años. Siga las recomendaciones de su médico."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "polipo_pediculado": {
+    "label_es": "Pólipo Pediculado",
+    "label_en": "Pedunculated Polyp",
+    "default_explanation_es": {
+      "what_is": "Un pólipo pediculado es un crecimiento con forma de 'champiñón' que está unido a la pared del intestino mediante un pequeño tallo. Gracias a este tallo, generalmente es más fácil de extirpar.",
+      "implications": "La gran mayoría son benignos o con bajo riesgo. La naturaleza exacta se confirma con el análisis del tejido (biopsia). Si fue extirpado completamente, el pronóstico suele ser excelente.",
+      "follow_up": "Habitualmente se recomienda una colonoscopia de control a los 3 años si el pólipo era grande, o a los 5-10 años si era pequeño y benigno. Su médico le indicará el intervalo adecuado."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "adenoma_avanzado": {
+    "label_es": "Adenoma Avanzado",
+    "label_en": "Advanced Adenoma",
+    "default_explanation_es": {
+      "what_is": "Un adenoma avanzado es un tipo de pólipo con características que requieren mayor atención: puede ser grande (más de 1 cm), tener una arquitectura vellosa, o mostrar displasia de alto grado al análisis microscópico. Es importante detectarlo y extirparlo.",
+      "implications": "Aunque no es cáncer, un adenoma avanzado tiene mayor potencial de convertirse en cáncer con el tiempo si no se trata. Por eso es fundamental extirparlo completamente y realizar seguimiento adecuado. Su extirpación es curativa en la mayoría de los casos.",
+      "follow_up": "Se recomienda una colonoscopia de control en 3 años. Es muy importante cumplir con este seguimiento. Su médico le dará instrucciones precisas según los resultados histológicos."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "lst": {
+    "label_es": "LST (Tumor de Diseminación Lateral)",
+    "label_en": "LST (Laterally Spreading Tumor)",
+    "default_explanation_es": {
+      "what_is": "El LST es un tipo especial de lesión plana o ligeramente elevada que crece horizontalmente por la pared del intestino más que hacia el interior. Se detecta mejor con técnicas endoscópicas especiales. Puede ser de tipo granular (con nódulos) o no granular (liso).",
+      "implications": "Los LST tienen un potencial variable según su subtipo. Algunos tienen bajo riesgo, otros pueden contener áreas de displasia o incluso cáncer superficial. Por eso es esencial una evaluación endoscópica experta y su resección completa.",
+      "follow_up": "Dependiendo de si fue resecado completamente y de su histología, se recomienda control endoscópico al cabo de 3-6 meses (para verificar cicatrización) y luego cada 1-3 años. Siga estrictamente las indicaciones de su médico."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "tumor_adc": {
+    "label_es": "Tumor (Adenocarcinoma - ADC)",
+    "label_en": "Tumor (Adenocarcinoma)",
+    "default_explanation_es": {
+      "what_is": "Se ha identificado una lesión con características de tumor maligno (adenocarcinoma colorrectal). El adenocarcinoma es el tipo más frecuente de cáncer de colon. El diagnóstico se confirma mediante biopsia.",
+      "implications": "Este hallazgo requiere atención médica especializada urgente. El pronóstico depende fundamentalmente de la etapa en que se detecta: cuando se encuentra en etapas tempranas, el tratamiento es altamente efectivo. Por eso la detección precoz mediante colonoscopia es tan importante.",
+      "follow_up": "Su médico coordinará de inmediato los siguientes pasos: confirmación histológica (biopsia), estudios de extensión (TAC, resonancia), valoración por cirugía y oncología, y plan de tratamiento. No demore en contactar a su médico para iniciar cuanto antes el proceso."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "hemorroides_internas": {
+    "label_es": "Hemorroides Internas",
+    "label_en": "Internal Hemorrhoids",
+    "default_explanation_es": {
+      "what_is": "Las hemorroides internas son venas dilatadas (varices) situadas en la parte interna del recto, justo encima del ano. Son extremadamente frecuentes: se estima que más del 50% de los adultos las desarrollan en algún momento de su vida.",
+      "implications": "Las hemorroides internas pueden causar sangrado rectal (sangre roja brillante en el papel o en el agua del inodoro), sensación de presión o de cuerpo extraño, o en ocasiones prolapso (que el tejido protruya hacia afuera). Generalmente no son peligrosas pero deben ser evaluadas por su médico.",
+      "follow_up": "El tratamiento incluye medidas dietéticas (más fibra y agua), hábitos defecatorios correctos (evitar esfuerzos), y según el grado, tratamiento médico o procedimientos como ligadura con banda elástica. Consulte a su médico si presenta sangrado rectal."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "papila_anal_hipertrofica": {
+    "label_es": "Papila Anal Hipertrófica",
+    "label_en": "Hypertrophic Anal Papilla",
+    "default_explanation_es": {
+      "what_is": "La papila anal hipertrófica es un crecimiento benigno del tejido situado en la línea dentada del canal anal (la zona de transición entre el recto y el ano). Es como un pequeño 'apéndice' o protuberancia de tejido fibroso, completamente benigno.",
+      "implications": "Es un hallazgo completamente benigno. Puede ser asintomático o en algunos casos causar sensación de cuerpo extraño o molestia leve. No tiene relación con el cáncer.",
+      "follow_up": "En la mayoría de los casos no requiere tratamiento. Si produce molestias persistentes, su médico puede evaluar la conveniencia de extirparlo mediante un procedimiento sencillo. No requiere colonoscopia de seguimiento por este hallazgo."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "angiodisplasia": {
+    "label_es": "Angiodisplasia",
+    "label_en": "Angiodysplasia",
+    "default_explanation_es": {
+      "what_is": "La angiodisplasia son pequeñas malformaciones de los vasos sanguíneos (capilares) de la pared del intestino grueso. Aparecen como manchas rojizas o ramificaciones vasculares visibles durante la colonoscopia. Son más frecuentes con la edad.",
+      "implications": "La angiodisplasia puede ser la causa de sangrado digestivo oculto o visible (anemia, sangre en heces). Dependiendo de su localización y tamaño, puede ser tratada directamente durante la colonoscopia mediante coagulación (argón plasma u otros métodos).",
+      "follow_up": "Si fue tratada durante la exploración, su médico le indicará si necesita control posterior. Es importante vigilar los síntomas de anemia (cansancio, palidez) y consultar si presenta sangrado. Mantenga los controles analíticos que su médico le recomiende."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "colitis_ulcerosa_proctitis": {
+    "label_es": "Colitis Ulcerosa - Proctitis",
+    "label_en": "Ulcerative Colitis - Proctitis",
+    "default_explanation_es": {
+      "what_is": "La proctitis ulcerosa es una forma de Colitis Ulcerosa (una enfermedad inflamatoria intestinal) que afecta únicamente al recto, la última porción del intestino. Es la forma más limitada y localizada de esta enfermedad.",
+      "implications": "Los síntomas habituales incluyen sangrado rectal, urgencia defecatoria y sensación de evacuación incompleta. Al estar limitada al recto, suele tener buen pronóstico y responde bien al tratamiento local (supositorios, enemas). Sin embargo, requiere seguimiento para detectar posible extensión.",
+      "follow_up": "Esta enfermedad requiere seguimiento periódico con su médico gastroenterólogo. El tratamiento suele ser con medicación tópica (mesalazina en supositorios o enemas). Es importante seguir el tratamiento aunque se encuentre bien, para mantener la remisión."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "colitis_ulcerosa_izquierda": {
+    "label_es": "Colitis Ulcerosa - Colitis Izquierda",
+    "label_en": "Ulcerative Colitis - Left-sided Colitis",
+    "default_explanation_es": {
+      "what_is": "La colitis ulcerosa de lado izquierdo (o colitis distal) es una forma de Colitis Ulcerosa que afecta el recto y el colon izquierdo (hasta la flexura esplénica). Es una enfermedad inflamatoria crónica del intestino.",
+      "implications": "Los síntomas incluyen diarrea con sangre, dolor abdominal tipo cólico y urgencia defecatoria. Requiere tratamiento médico continuo. Las personas con colitis ulcerosa de larga evolución tienen un mayor riesgo de cáncer de colon, por lo que el seguimiento endoscópico es fundamental.",
+      "follow_up": "Requiere tratamiento médico regular (mesalazina oral y/o tópica, y otros fármacos según la gravedad). Se recomiendan colonoscopias de vigilancia cada 1-3 años a partir de los 8-10 años de evolución de la enfermedad. Siga siempre las indicaciones de su gastroenterólogo."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "colitis_ulcerosa_pancolitis": {
+    "label_es": "Colitis Ulcerosa - Pancolitis",
+    "label_en": "Ulcerative Colitis - Pancolitis",
+    "default_explanation_es": {
+      "what_is": "La pancolitis es la forma más extensa de Colitis Ulcerosa: afecta todo el colon, desde el recto hasta el ciego. Es una enfermedad inflamatoria crónica intestinal que requiere seguimiento y tratamiento especializados.",
+      "implications": "Al afectar todo el colon, los síntomas pueden ser más intensos: diarrea frecuente con sangre, dolor abdominal, fatiga y pérdida de peso. El riesgo de cáncer de colon es mayor que en las formas más limitadas, especialmente después de muchos años de evolución.",
+      "follow_up": "Requiere tratamiento médico especializado (mesalazina, inmunosupresores o biológicos según la gravedad) y colonoscopias de vigilancia cada 1-2 años a partir de los 8-10 años de evolución. Es esencial el seguimiento estrecho con su gastroenterólogo de confianza."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  },
+  "ileitis_crohn": {
+    "label_es": "Ileitis (Enfermedad de Crohn)",
+    "label_en": "Ileitis (Crohn's Disease)",
+    "default_explanation_es": {
+      "what_is": "La ileitis de Crohn es la inflamación del íleon terminal (la parte final del intestino delgado) causada por la Enfermedad de Crohn, una enfermedad inflamatoria intestinal crónica. Puede afectar a cualquier parte del tubo digestivo, pero el íleon terminal es la localización más frecuente.",
+      "implications": "Los síntomas pueden incluir dolor en la parte inferior derecha del abdomen, diarrea (generalmente sin sangre), pérdida de peso, fatiga y fiebre. La Enfermedad de Crohn es una condición crónica con períodos de actividad (brotes) y remisión. Puede complicarse con estenosis, fístulas o abscesos.",
+      "follow_up": "Requiere seguimiento especializado por gastroenterólogo y tratamiento médico (antiinflamatorios, inmunosupresores o biológicos según la gravedad). Es importante mantener una dieta equilibrada, evitar el tabaco y cumplir estrictamente el tratamiento prescrito para reducir los brotes."
+    },
+    "photo_url": "",
+    "youtube_url": ""
+  }
+}
