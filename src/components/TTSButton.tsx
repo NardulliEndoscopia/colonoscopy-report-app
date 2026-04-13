@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Language } from '@/lib/types';
 
 interface TTSButtonProps {
@@ -10,91 +10,80 @@ interface TTSButtonProps {
   label?: string;
 }
 
-const langToBCP47: Record<Language, string> = {
-  es: 'es-ES', en: 'en-GB', fr: 'fr-FR', it: 'it-IT',
-  pt: 'pt-PT', de: 'de-DE', nl: 'nl-NL', pl: 'pl-PL',
-  ro: 'ro-RO', ar: 'ar-SA', ru: 'ru-RU', zh: 'zh-CN',
-};
-
-const voicePriority: Record<Language, string[]> = {
-  es: ['es-ES', 'es-MX', 'es'], en: ['en-GB', 'en-US', 'en'],
-  fr: ['fr-FR', 'fr'], it: ['it-IT', 'it'], pt: ['pt-PT', 'pt-BR', 'pt'],
-  de: ['de-DE', 'de'], nl: ['nl-NL', 'nl'], pl: ['pl-PL', 'pl'],
-  ro: ['ro-RO', 'ro'], ar: ['ar-SA', 'ar'], ru: ['ru-RU', 'ru'], zh: ['zh-CN', 'zh'],
-};
-
-function pickVoice(lang: Language): SpeechSynthesisVoice | null {
-  const voices = window.speechSynthesis.getVoices();
-  for (const locale of voicePriority[lang]) {
-    const v = voices.find(v => v.lang === locale);
-    if (v) return v;
-  }
-  const prefix = langToBCP47[lang].split('-')[0];
-  return voices.find(v => v.lang.startsWith(prefix)) ?? null;
-}
-
 export default function TTSButton({ text, language, className = '', label }: TTSButtonProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [supported, setSupported] = useState(false);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    setSupported(true);
-    // Load voices
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const ctxRef = useRef<AudioContext | null>(null);
 
   const stop = useCallback(() => {
-    window.speechSynthesis?.cancel();
-    if (pollRef.current) clearInterval(pollRef.current);
+    try { sourceRef.current?.stop(); } catch { /* already stopped */ }
+    sourceRef.current = null;
     setIsSpeaking(false);
+    setIsLoading(false);
   }, []);
 
-  const handleClick = useCallback(() => {
-    if (!supported) return;
-    if (isSpeaking) { stop(); return; }
+  const handleClick = useCallback(async () => {
+    if (isSpeaking || isLoading) { stop(); return; }
 
-    window.speechSynthesis.cancel();
+    setIsLoading(true);
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = langToBCP47[language];
-    utterance.rate = 0.88;
+    // Create/resume AudioContext synchronously on the user gesture — this unlocks audio
+    // in all browsers regardless of how long the subsequent async operations take.
+    if (!ctxRef.current) {
+      ctxRef.current = new AudioContext();
+    }
+    const ctx = ctxRef.current;
+    if (ctx.state === 'suspended') await ctx.resume();
 
-    const voice = pickVoice(language);
-    if (voice) utterance.voice = voice;
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, language }),
+      });
 
-    utterance.onstart = () => {
+      if (!res.ok) throw new Error('TTS failed');
+
+      const arrayBuffer = await res.arrayBuffer();
+      const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(ctx.destination);
+      source.onended = stop;
+      sourceRef.current = source;
+
+      setIsLoading(false);
       setIsSpeaking(true);
-      // Poll because onend is unreliable on some browsers
-      pollRef.current = setInterval(() => {
-        if (!window.speechSynthesis.speaking) {
-          if (pollRef.current) clearInterval(pollRef.current);
-          setIsSpeaking(false);
-        }
-      }, 500);
-    };
-    utterance.onend = stop;
-    utterance.onerror = stop;
+      source.start(0);
+    } catch {
+      stop();
+    }
+  }, [isSpeaking, isLoading, text, language, stop]);
 
-    window.speechSynthesis.speak(utterance);
-  }, [supported, isSpeaking, text, language, stop]);
-
-  if (!supported) return null;
+  const isActive = isSpeaking || isLoading;
 
   return (
     <button
       onClick={handleClick}
-      title={isSpeaking ? 'Detener' : (label || 'Escuchar')}
-      aria-label={isSpeaking ? 'Detener narración' : (label || 'Escuchar')}
+      title={isActive ? 'Detener narración' : (label || 'Escuchar')}
+      aria-label={isActive ? 'Detener narración' : (label || 'Escuchar')}
       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-        isSpeaking
+        isActive
           ? 'bg-blue-100 text-blue-700 border border-blue-300 hover:bg-blue-200'
           : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200'
       } ${className}`}
     >
-      {isSpeaking ? (
+      {isLoading ? (
+        <>
+          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+          {label && <span>...</span>}
+        </>
+      ) : isSpeaking ? (
         <>
           <svg className="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
             <rect x="3" y="4" width="3" height="12" rx="1.5" />

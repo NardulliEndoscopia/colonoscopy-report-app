@@ -1,23 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts';
+import OpenAI from 'openai';
 
 export const maxDuration = 30;
 
-// Neural voices — one native female voice per supported language
-const voiceMap: Record<string, string> = {
-  es: 'es-ES-ElviraNeural',
-  en: 'en-GB-SoniaNeural',
-  fr: 'fr-FR-DeniseNeural',
-  it: 'it-IT-ElsaNeural',
-  pt: 'pt-PT-RaquelNeural',
-  de: 'de-DE-KatjaNeural',
-  nl: 'nl-NL-ColetteNeural',
-  pl: 'pl-PL-ZofiaNeural',
-  ro: 'ro-RO-AlinaNeural',
-  ar: 'ar-SA-ZariyahNeural',
-  ru: 'ru-RU-SvetlanaNeural',
-  zh: 'zh-CN-XiaoxiaoNeural',
-};
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,21 +15,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing text' }, { status: 400 });
     }
 
-    const voice = voiceMap[language] ?? voiceMap['es'];
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json({ error: 'OPENAI_API_KEY not configured' }, { status: 500 });
+    }
 
-    const tts = new MsEdgeTTS();
-    await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-
-    const { audioStream } = tts.toStream(text);
-    const chunks: Buffer[] = [];
-    await new Promise<void>((resolve, reject) => {
-      audioStream.on('data', (chunk: Buffer) => chunks.push(Buffer.from(chunk)));
-      audioStream.on('end', resolve);
-      audioStream.on('error', reject);
+    const mp3 = await client.audio.speech.create({
+      model: 'tts-1',
+      voice: 'nova',
+      input: text,
+      speed: 0.9,
     });
-    const audio = Buffer.concat(chunks);
 
-    return new NextResponse(audio, {
+    const buffer = Buffer.from(await mp3.arrayBuffer());
+
+    return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'audio/mpeg',
         'Cache-Control': 'no-store',
